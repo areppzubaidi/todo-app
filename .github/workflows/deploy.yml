@@ -29,7 +29,7 @@ jobs:
         with:
           context: ./app
           push: true
-          tags: "${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}, ${{ env.DOCKER_IMAGE }}:latest"
+          tags: ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}, ${{ env.DOCKER_IMAGE }}:latest
 
   terraform:
     needs: build-and-push
@@ -49,7 +49,7 @@ jobs:
       - name: Terraform Apply
         run: terraform -chdir=terraform apply -auto-approve
         env:
-          TF_VAR_ssh_public_key_path: ${{ secrets.SSH_PUBLIC_KEY_PATH }}
+          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
       - name: Get VM IP
         id: ip
         run: echo "ip=$(terraform -chdir=terraform output -raw public_ip)" >> $GITHUB_OUTPUT
@@ -75,4 +75,4 @@ jobs:
       - name: Run Ansible playbook
         run: ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
         env:
-          ANSIBLE_HOST_KEY_CHECKING: false
+          ANSIBLE_HOST_KEY_CHECKING: False
